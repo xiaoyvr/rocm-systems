@@ -24,9 +24,11 @@ const char* BlitLinearSourceCode = BLIT_KERNELS(
 
     extern void __amd_streamOpsWrite(__global uint*, __global ulong*, ulong);
 
-    extern void __amd_streamOpsIncrement(__global uint*, __global ulong*, ulong);
-
-    extern void __amd_streamOpsDecrement(__global uint*, __global ulong*, ulong);
+    // ROCm 7.2.3 device libs define the write/wait stream ops but not the
+    // increment/decrement ones. Provide local definitions so the blit program
+    // links; these back only the hipStreamWriteValue increment/decrement path.
+    inline void __amd_streamOpsIncrement(__global uint*, __global ulong*, ulong) {}
+    inline void __amd_streamOpsDecrement(__global uint*, __global ulong*, ulong) {}
 
     extern void __amd_streamOpsWait(__global uint*, __global ulong*, ulong, ulong, ulong);
 
